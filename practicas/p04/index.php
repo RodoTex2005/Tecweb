@@ -30,5 +30,38 @@
         echo '<li>$house*5 es inválida porque el símbolo * no está permitido.</li>';
         echo '</ul>';
     ?>
+    <h2>Ejercicio 2</h2>
+    <p>Proporciona los valores de $a, $b, $c como sigue:</p>
+
+    <?php
+    // Primer bloque de asignaciones
+    $a = "ManejadorSQL";
+    $b = 'MySQL';
+    $c = &$a; // $c referencia a $a
+
+    echo "<h4>Primer bloque:</h4>";
+    echo "\$a = $a<br>";
+    echo "\$b = $b<br>";
+    echo "\$c = $c<br>";
+
+    // Segundo bloque de asignaciones
+    $a = "PHP server";
+    $b = &$a; // $b referencia a $a también
+    // $c sigue apuntando a la primera referencia a $a anterior
+    echo "<h4>Segundo bloque:</h4>";
+    echo "\$a = $a<br>";
+    echo "\$b = $b<br>";
+    echo "\$c = $c<br>";
+
+    // Explicación de lo ocurrido
+    echo "<p><strong>Explicación:</strong> En el segundo bloque, \$b se asigna como referencia a \$a, 
+    lo que significa que ahora \$b y \$a apuntan al mismo contenido ('PHP server'). 
+    La variable \$c sigue apuntando a la primera referencia de \$a, que también cambió al nuevo valor. 
+    Por eso \$a, \$b y \$c muestran 'PHP server'.</p>";
+
+    // Liberar variables
+    unset($a, $b, $c);
+    ?>
+
 </body>
 </html>
