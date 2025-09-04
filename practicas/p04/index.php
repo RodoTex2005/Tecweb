@@ -149,7 +149,31 @@
     var_dump($c);
     ?>
 
+    <h2>Ejercicio 6</h2>
+    <p>Dar y comprobar el valor booleano de las variables $a, $b, $c, $d, $e y $f:</p>
 
+    <?php
+    $a = "0";
+    $b = "TRUE";
+    $c = FALSE;
+    $d = ($a OR $b);
+    $e = ($a AND $c);
+    $f = ($a XOR $b);
 
+    echo "<h4>Comprobación con var_dump:</h4>";
+    echo "\$a = "; var_dump((bool)$a); echo "<br>";
+    echo "\$b = "; var_dump((bool)$b); echo "<br>";
+    echo "\$c = "; var_dump($c); echo "<br>";
+    echo "\$d = "; var_dump($d); echo "<br>";
+    echo "\$e = "; var_dump($e); echo "<br>";
+    echo "\$f = "; var_dump($f); echo "<br>";
+
+    // Mostrar $c y $e en texto legible
+    echo "<h4>Transformación de valores booleanos:</h4>";
+    echo "\$c = " . ($c ? "true" : "false") . "<br>";
+    echo "\$e = " . ($e ? "true" : "false") . "<br>";
+    ?>
+
+    
 </body>
 </html>
