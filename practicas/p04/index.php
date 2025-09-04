@@ -63,5 +63,46 @@
     unset($a, $b, $c);
     ?>
 
+    <h2>Ejercicio 3</h2>
+    <p>Muestra el contenido de cada variable inmediatamente después de cada asignación y verifica su evolución:</p>
+
+    <?php
+    // 1) Asignación inicial
+    $a = "PHP5";
+    echo "<h4>Después de \$a = 'PHP5';</h4>";
+    var_dump($a);
+
+    // 2) Referencia en el arreglo
+    $z[] = &$a;
+    echo "<h4>Después de \$z[] = &\$a;</h4>";
+    var_dump($z);
+
+    // 3) Asignación a $b
+    $b = "5a version de PHP";
+    echo "<h4>Después de \$b = '5a version de PHP';</h4>";
+    var_dump($b);
+
+    // 4) Operación con $b
+    $c = $b * 10;  // Como $b es string, el resultado será numérico (int 50) porque PHP intenta convertir
+    echo "<h4>Después de \$c = \$b * 10;</h4>";
+    var_dump($c);
+
+    // 5) Concatenación de $a y $b
+    $a .= $b;
+    echo "<h4>Después de \$a .= \$b;</h4>";
+    var_dump($a);
+
+    // 6) Operación con $b y $c
+    $b *= $c;  // PHP intenta convertir $b a número (lo que pueda del string)
+    echo "<h4>Después de \$b *= \$c;</h4>";
+    var_dump($b);
+
+    // 7) Cambio de valor dentro del arreglo $z
+    $z[0] = "MySQL";
+    echo "<h4>Después de \$z[0] = 'MySQL';</h4>";
+    var_dump($z);
+    ?>
+
+
 </body>
 </html>
