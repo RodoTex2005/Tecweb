@@ -127,6 +127,29 @@
     echo "</pre>";
     ?>
 
-    
+    <h2>Ejercicio 5</h2>
+    <p>Dar el valor de las variables <code>$a</code>, <code>$b</code>, <code>$c</code> al final del siguiente script:</p>
+
+    <?php
+    $a = "7 personas";      // String
+    $b = (integer) $a;      // Convierte a entero, toma el valor inicial "7"
+    $a = "9E3";             // String que representa notación científica
+    $c = (double) $a;       // Convierte a double, 9E3 = 9000
+
+    echo "<h4>Valores finales:</h4>";
+    echo "\$a = $a<br>";  
+    echo "\$b = $b<br>";  
+    echo "\$c = $c<br>";  
+
+    echo "<h4>Tipos con var_dump:</h4>";
+    var_dump($a);
+    echo "<br>";
+    var_dump($b);
+    echo "<br>";
+    var_dump($c);
+    ?>
+
+
+
 </body>
 </html>
