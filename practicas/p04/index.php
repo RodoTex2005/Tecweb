@@ -103,6 +103,30 @@
     var_dump($z);
     ?>
 
+    <h2>Ejercicio 4</h2>
+    <p>Lee y muestra los valores de las variables del ejercicio anterior usando la matriz <code>$GLOBALS</code>:</p>
 
+    <?php
+    // Volvemos a definir las variables como en el ejercicio 3
+    $a = "PHP5";
+    $z[] = &$a;
+    $b = "5a version de PHP";
+    $c = $b * 10;
+    $a .= $b;
+    $b *= $c;
+    $z[0] = "MySQL";
+
+    // Mostrar valores usando $GLOBALS
+    echo "<h4>Valores accedidos con \$GLOBALS:</h4>";
+    echo "\$GLOBALS['a'] = " . $GLOBALS['a'] . "<br>";
+    echo "\$GLOBALS['b'] = " . $GLOBALS['b'] . "<br>";
+    echo "\$GLOBALS['c'] = " . $GLOBALS['c'] . "<br>";
+
+    echo "<pre>";
+    print_r($GLOBALS['z']);  // Mostrar arreglo completo
+    echo "</pre>";
+    ?>
+
+    
 </body>
 </html>
