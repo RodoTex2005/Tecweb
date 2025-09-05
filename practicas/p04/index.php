@@ -74,16 +74,16 @@
     echo "<h4>Después de \$b = '5a version de PHP';</h4>";
     var_dump($b);
 
-    $c = $b * 10; 
-    echo "<h4>Después de \$c = \$b * 10;</h4>";
+    $c = (int)$b * 10; 
+    echo "<h4>Después de \$c = (int)\$b * 10;</h4>";
     var_dump($c);
 
     $a .= $b;
     echo "<h4>Después de \$a .= \$b;</h4>";
     var_dump($a);
 
-    $b *= $c;  
-    echo "<h4>Después de \$b *= \$c;</h4>";
+    $b = (int)$b * $c;  
+    echo "<h4>Después de \$b = (int)\$b * \$c;</h4>";
     var_dump($b);
 
     $z[0] = "MySQL";
@@ -98,9 +98,9 @@
     $a = "PHP5";
     $z[] = &$a;
     $b = "5a version de PHP";
-    $c = $b * 10;
+    $c = (int)$b * 10;
     $a .= $b;
-    $b *= $c;
+    $b = (int)$b * $c;
     $z[0] = "MySQL";
 
     echo "<h4>Valores accedidos con \$GLOBALS:</h4>";
@@ -126,13 +126,6 @@
     echo "\$a = $a<br>";  
     echo "\$b = $b<br>";  
     echo "\$c = $c<br>";  
-
-    echo "<h4>Tipos con var_dump:</h4>";
-    var_dump($a);
-    echo "<br>";
-    var_dump($b);
-    echo "<br>";
-    var_dump($c);
     ?>
 
     <h2>Ejercicio 6</h2>
