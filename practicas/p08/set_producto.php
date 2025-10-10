@@ -8,7 +8,7 @@ $unidades = 1;
 $imagen   = 'img/imagen.png';
 
 /** SE CREA EL OBJETO DE CONEXION */
-@$link = new mysqli('localhost', 'root', '12345678a', 'marketzone');	
+@$link = new mysqli('localhost', 'root', 'Rudytexcuc@no', 'marketzone');	
 
 /** comprobar la conexión */
 if ($link->connect_errno) 

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Productos</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background: #f0f0f0; }
+        .container { background: white; padding: 20px; border-radius: 10px; max-width: 600px; }
+        h1 { color: #333; text-align: center; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .submit-btn { background: #28a745; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; }
+        .required { color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registro de Nuevo Producto</h1>
+        <form action="set_producto_v2.php" method="post">
+            <div class="form-group">
+                <label for="nombre">Nombre <span class="required">*</span></label>
+                <input type="text" id="nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="marca">Marca <span class="required">*</span></label>
+                <input type="text" id="marca" name="marca" required>
+            </div>
+            <div class="form-group">
+                <label for="modelo">Modelo <span class="required">*</span></label>
+                <input type="text" id="modelo" name="modelo" required>
+            </div>
+            <div class="form-group">
+                <label for="precio">Precio <span class="required">*</span></label>
+                <input type="number" id="precio" name="precio" step="0.01" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="detalles">Detalles</label>
+                <textarea id="detalles" name="detalles"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="unidades">Unidades <span class="required">*</span></label>
+                <input type="number" id="unidades" name="unidades" min="0" required>
+            </div>
+            <div class="form-group">
+                <label for="imagen">Imagen</label>
+                <input type="text" id="imagen" name="imagen" value="img/imagen.png">
+            </div>
+            <button type="submit" class="submit-btn">Registrar Producto</button>
+        </form>
+    </div>
+</body>
+</html>
