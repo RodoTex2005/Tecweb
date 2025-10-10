@@ -4,7 +4,7 @@
 
 /** comprobar la conexión */
 if ($link->connect_errno) 
-{
+{    
     die('Falló la conexión: '.$link->connect_error.'<br/>');
 }
 
@@ -64,22 +64,10 @@ if (!empty($errores)) {
     exit;
 }
 
-// ==================== QUERY DE INSERCIÓN ====================
-// PRIMERO: Agregar las columnas faltantes a tu tabla
-/*
-EJECUTA EN phpMyAdmin:
-ALTER TABLE productos 
-ADD COLUMN marca VARCHAR(100) NOT NULL AFTER nombre,
-ADD COLUMN modelo VARCHAR(100) NOT NULL AFTER marca,
-ADD COLUMN detalles TEXT AFTER precio,
-ADD COLUMN eliminado TINYINT DEFAULT 0 AFTER imagen;
-*/
 
-// Query con column names para tu estructura ACTUAL (sin marca, modelo, detalles, eliminado)
-$sql = "INSERT INTO productos (nombre, precio, unidades, imagen) 
-        VALUES ('{$nombre}', {$precio}, {$unidades}, '{$imagen}')";
+$sql = "INSERT INTO productos (nombre, marca, modelo, precio, detalles, unidades, imagen, eliminado) 
+        VALUES ('{$nombre}', '{$marca}', '{$modelo}', {$precio}, '{$detalles}', {$unidades}, '{$imagen}', 0)";
 
-// ==================== EJECUTAR INSERCIÓN ====================
 if ($link->query($sql)) 
 {
     echo '<!DOCTYPE html>
