@@ -58,67 +58,70 @@
             <div class="card-body">
               <!-- FORMULARIO PARA AGREGAR PRODUCTO -->
               <form id="product-form">
-    <div class="form-group">
-    <label for="nombre" class="form-label">Nombre del Producto *</label>
-    <input class="form-control" type="text" id="nombre" name="nombre" placeholder="Nombre de producto" required>
-    <div class="validation-status">
-        <span class="form-text text-warning status-message" id="nombre-status" style="display: none;"></span>
-    </div>
-</div>
-    
-    <div class="form-group">
-        <label for="marca" class="form-label">Marca *</label>
-        <input class="form-control" type="text" id="marca" name="marca" placeholder="Marca del producto" required>
-        <div class="validation-status">
-            <span class="form-text text-warning status-message" id="marca-status" style="display: none;"></span>
-        </div>
-    </div>
+                <div class="form-group">
+                  <label for="nombre" class="form-label">Nombre del Producto *</label>
+                  <input class="form-control" type="text" id="nombre" name="nombre" placeholder="Nombre de producto" required>
+                  <div class="validation-status">
+                    <span class="form-text text-warning status-message" id="nombre-status" style="display: none;"></span>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="marca" class="form-label">Marca *</label>
+                  <input class="form-control" type="text" id="marca" name="marca" placeholder="Marca del producto" required>
+                  <div class="validation-status">
+                    <span class="form-text text-warning status-message" id="marca-status" style="display: none;"></span>
+                  </div>
+                </div>
 
-    <div class="form-group">
-        <label for="modelo" class="form-label">Modelo *</label>
-        <input class="form-control" type="text" id="modelo" name="modelo" placeholder="Modelo del producto" required>
-        <div class="validation-status">
-            <span class="form-text text-warning status-message" id="modelo-status" style="display: none;"></span>
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="precio" class="form-label">Precio *</label>
-        <input class="form-control" type="number" id="precio" name="precio" step="0.01" placeholder="Precio del producto" required>
-        <div class="validation-status">
-            <span class="form-text text-warning status-message" id="precio-status" style="display: none;"></span>
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="unidades" class="form-label">Unidades *</label>
-        <input class="form-control" type="number" id="unidades" name="unidades" placeholder="Unidades disponibles" required>
-        <div class="validation-status">
-            <span class="form-text text-warning status-message" id="unidades-status" style="display: none;"></span>
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="detalles" class="form-label">Detalles</label>
-        <textarea class="form-control" id="detalles" name="detalles" cols="30" rows="3" placeholder="Detalles del producto"></textarea>
-    </div>
+                <div class="form-group">
+                  <label for="modelo" class="form-label">Modelo *</label>
+                  <input class="form-control" type="text" id="modelo" name="modelo" placeholder="Modelo del producto" required>
+                  <div class="validation-status">
+                    <span class="form-text text-warning status-message" id="modelo-status" style="display: none;"></span>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="precio" class="form-label">Precio *</label>
+                  <input class="form-control" type="number" id="precio" name="precio" step="0.01" placeholder="Precio del producto" required>
+                  <div class="validation-status">
+                    <span class="form-text text-warning status-message" id="precio-status" style="display: none;"></span>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="unidades" class="form-label">Unidades *</label>
+                  <input class="form-control" type="number" id="unidades" name="unidades" placeholder="Unidades disponibles" required>
+                  <div class="validation-status">
+                    <span class="form-text text-warning status-message" id="unidades-status" style="display: none;"></span>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="detalles" class="form-label">Detalles</label>
+                  <textarea class="form-control" id="detalles" name="detalles" cols="30" rows="3" placeholder="Detalles del producto"></textarea>
+                  <div class="validation-status">
+                    <span class="form-text text-warning status-message" id="detalles-status" style="display: none;"></span>
+                  </div>
+                </div>
 
-    <div class="form-group">
-        <label for="imagen" class="form-label">Imagen</label>
-        <input class="form-control" type="text" id="imagen" name="imagen" placeholder="URL de la imagen" value="img/default.png">
-    </div>
-    
-    <input type="hidden" id="productId" name="id">
-    <button id="submit-btn" class="btn btn-primary btn-block text-center" type="submit">
-        Agregar Producto
-    </button>
-    <button id="cancel-btn" type="button" class="btn btn-secondary btn-block mt-2" style="display: none;">
-        Cancelar Edición
-    </button>
-    <button type="button" class="btn btn-warning btn-block mt-2" onclick="limpiarFormulario()">
-        Limpiar Formulario
-    </button>
-</form>
+                <div class="form-group">
+                  <label for="imagen" class="form-label">Imagen</label>
+                  <input class="form-control" type="text" id="imagen" name="imagen" placeholder="URL de la imagen" value="img/default.png">
+                </div>
+                
+                <input type="hidden" id="productId" name="id">
+                <button id="submit-btn" class="btn btn-primary btn-block text-center" type="submit">
+                  Agregar Producto
+                </button>
+                <button id="cancel-btn" type="button" class="btn btn-secondary btn-block mt-2" style="display: none;">
+                  Cancelar Edición
+                </button>
+                <button type="button" class="btn btn-warning btn-block mt-2" onclick="limpiarFormulario()">
+                  Limpiar Formulario
+                </button>
+              </form>
             </div>
           </div>
         </div>

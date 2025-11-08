@@ -6,18 +6,18 @@ $data = array(
     'message' => 'La consulta falló'
 );
 
-if( isset($_GET['id']) ) {
-    $id = $_GET['id'];
-    $sql = "UPDATE productos SET eliminado=1 WHERE id = {$id}";
+if( isset($_POST['id']) ) {
+    $id = $_POST['id'];
+    // CAMBIO: productos → libros
+    $sql = "UPDATE libros SET eliminado=1 WHERE id = {$id}";
     if ( $conexion->query($sql) ) {
         $data['status'] =  "success";
-        $data['message'] =  "Producto eliminado";
+        $data['message'] =  "Libro eliminado";
     } else {
         $data['message'] = "ERROR: No se ejecuto $sql. " . mysqli_error($conexion);
     }
     $conexion->close();
 } 
 
-header('Content-Type: application/json');
 echo json_encode($data, JSON_PRETTY_PRINT);
 ?>

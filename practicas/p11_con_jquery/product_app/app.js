@@ -1,9 +1,11 @@
 // VARIABLES GLOBALES PARA EDICIÓN
 let editMode = false;
 let currentEditId = null;
+let nombreRepetido = false;
+let mensajesErrores = [];
 
-// FUNCIÓN PRINCIPAL AL CARGAR LA PÁGINA
 $(document).ready(function() {
+    // INICIALIZACIÓN
     init();
     
     // ASIGNACIÓN DE EVENTOS CON JQUERY
@@ -12,6 +14,7 @@ $(document).ready(function() {
     $('#search').on('input', buscarEnTiempoReal);
     $(document).on('click', '.product-delete', eliminarProducto);
     $(document).on('click', '.product-edit', editarProducto);
+    $(document).on('click', '.product-item', seleccionarProducto);
     $('#cancel-btn').on('click', cancelarEdicion);
     
     // CONFIGURAR VALIDACIONES
@@ -21,19 +24,13 @@ $(document).ready(function() {
 function init() {
     // CARGAR LISTA DE PRODUCTOS AL INICIAR
     listarProductos();
+    $('#product-result').hide();
 }
 
 // CONFIGURAR VALIDACIONES DE CAMPOS
 function configurarValidaciones() {
-    // Validación al perder el foco
-    $('#nombre, #marca, #modelo, #precio, #unidades').on('blur', function() {
-        const campo = $(this).attr('id');
-        const valor = $(this).val();
-        validarCampo(campo, valor);
-    });
-
-    // Validación asíncrona del nombre en tiempo real
-    $('#nombre').on('input', async function() {
+    // Validación del nombre en tiempo real
+    $('#nombre').on('input', function() {
         const nombre = $(this).val().trim();
         
         if (nombre.length === 0) {
@@ -51,22 +48,25 @@ function configurarValidaciones() {
             return;
         }
 
-        // Mostrar mensaje de verificación
+        // Validación asíncrona del nombre
         mostrarEstado('nombre', '⏳ Verificando disponibilidad del nombre...', false);
         
-        try {
-            // TEMPORAL: Usar simulación para pruebas
-            const esValido = await simularValidacionNombre(nombre);
-            // const esValido = await validarNombreProducto(nombre); // Comentar esta línea
-            
+        validarNombreProducto(nombre).then(esValido => {
             if (esValido) {
                 mostrarEstado('nombre', '✓ Nombre disponible', false);
+                nombreRepetido = false;
             } else {
                 mostrarEstado('nombre', '✗ Este nombre de producto ya existe');
+                nombreRepetido = true;
             }
-        } catch (error) {
-            mostrarEstado('nombre', '⚠️ Error al verificar el nombre');
-        }
+        });
+    });
+
+    // Validación al perder el foco (blur)
+    $('#nombre, #marca, #modelo, #precio, #unidades, #detalles').on('blur', function() {
+        const campo = $(this).attr('id');
+        const valor = $(this).val();
+        validarCampo(campo, valor);
     });
 }
 
@@ -80,6 +80,14 @@ function validarCampo(campo, valor) {
             }
             if (valor.length < 2) {
                 mostrarEstado('nombre', 'El nombre debe tener al menos 2 caracteres');
+                return false;
+            }
+            if (valor.length > 100) {
+                mostrarEstado('nombre', 'El nombre no puede exceder 100 caracteres');
+                return false;
+            }
+            if (nombreRepetido) {
+                mostrarEstado('nombre', 'Este nombre de producto ya existe');
                 return false;
             }
             ocultarEstado('nombre');
@@ -135,6 +143,14 @@ function validarCampo(campo, valor) {
             ocultarEstado('unidades');
             return true;
 
+        case 'detalles':
+            if (valor.length > 250) {
+                mostrarEstado('detalles', 'Los detalles no pueden exceder 250 caracteres');
+                return false;
+            }
+            ocultarEstado('detalles');
+            return true;
+
         default:
             return true;
     }
@@ -143,66 +159,29 @@ function validarCampo(campo, valor) {
 // VALIDACIÓN ASÍNCRONA DEL NOMBRE DEL PRODUCTO
 function validarNombreProducto(nombre) {
     return new Promise((resolve) => {
-        // Simulamos una consulta a la BD primero para pruebas
-        setTimeout(() => {
-            // Consulta real al backend para verificar nombre
-            $.ajax({
-                url: './backend/product-validate.php',
-                type: 'GET',
-                data: { 
-                    nombre: nombre,
-                    excludeId: currentEditId 
-                },
-                dataType: 'json',
-                success: function(respuesta) {
-                    console.log('Respuesta validación:', respuesta);
-                    if (respuesta.disponible !== undefined) {
-                        resolve(respuesta.disponible);
-                    } else {
-                        // Si hay error, asumimos que está disponible
-                        resolve(true);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error en validación:', error);
-                    console.log('Response:', xhr.responseText);
-                    // En caso de error, asumimos que está disponible
+        $.ajax({
+            url: './backend/product-validate.php',
+            type: 'GET',
+            data: { 
+                nombre: nombre,
+                excludeId: currentEditId 
+            },
+            dataType: 'json',
+            success: function(respuesta) {
+                if (respuesta.disponible !== undefined) {
+                    resolve(respuesta.disponible);
+                } else {
                     resolve(true);
                 }
-            });
-        }, 300); // Pequeño delay para pruebas
+            },
+            error: function() {
+                resolve(true);
+            }
+        });
     });
 }
 
-// MOSTRAR MENSAJE DE ESTADO
-function mostrarEstado(campo, mensaje, esError = true) {
-    const elementoEstado = $(`#${campo}-status`);
-    elementoEstado.text(mensaje);
-    elementoEstado.removeClass('text-success text-warning');
-    elementoEstado.addClass(esError ? 'text-warning' : 'text-success');
-    elementoEstado.show();
-    
-    // Actualizar clase visual del campo
-    const elementoCampo = $(`#${campo}`);
-    elementoCampo.removeClass('is-valid is-invalid');
-    if (mensaje) {
-        elementoCampo.addClass(esError ? 'is-invalid' : 'is-valid');
-    }
-}
-
-// OCULTAR MENSAJE DE ESTADO
-function ocultarEstado(campo) {
-    $(`#${campo}-status`).hide();
-    $(`#${campo}`).removeClass('is-invalid');
-}
-
-// OCULTAR TODOS LOS MENSAJES DE ESTADO
-function ocultarTodosEstados() {
-    $('#nombre-status, #marca-status, #modelo-status, #precio-status, #unidades-status').hide();
-    $('#nombre, #marca, #modelo, #precio, #unidades').removeClass('is-valid is-invalid');
-}
-
-// FUNCIÓN PARA LISTAR TODOS LOS PRODUCTOS
+// FUNCIÓN PARA LISTAR PRODUCTOS
 function listarProductos() {
     $.ajax({
         url: './backend/product-list.php',
@@ -242,14 +221,13 @@ function listarProductos() {
                 `);
             }
         },
-        error: function(xhr, status, error) {
-            console.error('Error al cargar productos:', error);
+        error: function(error) {
             mostrarMensaje('error', 'Error al cargar productos');
         }
     });
 }
 
-// BÚSQUEDA EN TIEMPO REAL (AL TECLEAR)
+// BÚSQUEDA
 function buscarEnTiempoReal() {
     const search = $(this).val().trim();
     
@@ -261,7 +239,6 @@ function buscarEnTiempoReal() {
     }
 }
 
-// BÚSQUEDA CON BOTÓN "BUSCAR"
 function buscarProducto(e) {
     e.preventDefault();
     const search = $('#search').val().trim();
@@ -271,7 +248,6 @@ function buscarProducto(e) {
     }
 }
 
-// FUNCIÓN COMÚN PARA BÚSQUEDAS
 function realizarBusqueda(search) {
     $.ajax({
         url: './backend/product-search.php',
@@ -311,15 +287,9 @@ function realizarBusqueda(search) {
                 $('#products').html(template);
             } else {
                 mostrarMensaje('info', 'No se encontraron productos');
-                $('#products').html(`
-                    <tr>
-                        <td colspan="7" class="text-center">No se encontraron productos</td>
-                    </tr>
-                `);
             }
         },
-        error: function(xhr, status, error) {
-            console.error('Error en búsqueda:', error);
+        error: function(error) {
             mostrarMensaje('error', 'Error en la búsqueda');
         }
     });
@@ -329,64 +299,35 @@ function realizarBusqueda(search) {
 async function agregarProducto(e) {
     e.preventDefault();
     
-    // OBTENER VALORES DE LOS CAMPOS DIRECTAMENTE
-    const nombre = $('#nombre').val() ? $('#nombre').val().trim() : '';
-    const marca = $('#marca').val() ? $('#marca').val().trim() : '';
-    const modelo = $('#modelo').val() ? $('#modelo').val().trim() : '';
-    const precio = $('#precio').val() || '';
-    const unidades = $('#unidades').val() || '';
-    const detalles = $('#detalles').val() ? $('#detalles').val().trim() : '';
-    const imagen = $('#imagen').val() ? $('#imagen').val().trim() : 'img/default.png';
+    // OBTENER VALORES
+    const nombre = $('#nombre').val().trim();
+    const marca = $('#marca').val().trim();
+    const modelo = $('#modelo').val().trim();
+    const precio = $('#precio').val();
+    const unidades = $('#unidades').val();
+    const detalles = $('#detalles').val().trim();
+    const imagen = $('#imagen').val().trim() || 'img/default.png';
 
-    console.log('Datos del formulario:', { nombre, marca, modelo, precio, unidades, detalles, imagen }); // Debug
+    // REINICIAR MENSAJES DE ERROR
+    mensajesErrores = [];
+    ocultarTodosEstados();
 
-    // VALIDAR CAMPOS REQUERIDOS
-    const camposRequeridos = [
-        { campo: 'nombre', valor: nombre, nombre: 'Nombre del Producto' },
-        { campo: 'marca', valor: marca, nombre: 'Marca' },
-        { campo: 'modelo', valor: modelo, nombre: 'Modelo' },
-        { campo: 'precio', valor: precio, nombre: 'Precio' },
-        { campo: 'unidades', valor: unidades, nombre: 'Unidades' }
-    ];
+    // VALIDAR TODOS LOS CAMPOS REQUERIDOS
+    const camposValidos = 
+        validarCampo('nombre', nombre) &&
+        validarCampo('marca', marca) &&
+        validarCampo('modelo', modelo) &&
+        validarCampo('precio', precio) &&
+        validarCampo('unidades', unidades) &&
+        validarCampo('detalles', detalles);
 
-    // VERIFICAR CAMPOS VACÍOS
-    const camposVacios = camposRequeridos.filter(campo => !campo.valor);
-    
-    if (camposVacios.length > 0) {
-        const nombresCampos = camposVacios.map(campo => campo.nombre).join(', ');
-        mostrarMensaje('error', `Complete los campos requeridos: ${nombresCampos}`);
-        
-        // Resaltar campos vacíos
-        camposVacios.forEach(campo => {
-            $(`#${campo.campo}`).addClass('is-invalid');
-        });
+    // VERIFICAR SI HAY ERRORES
+    if (!camposValidos || nombreRepetido) {
+        mostrarMensaje('error', 'Corrija los errores en el formulario antes de enviar');
         return;
     }
 
-    // VALIDAR CADA CAMPO INDIVIDUALMENTE
-    const nombreValido = validarCampo('nombre', nombre);
-    const marcaValida = validarCampo('marca', marca);
-    const modeloValido = validarCampo('modelo', modelo);
-    const precioValido = validarCampo('precio', precio);
-    const unidadesValidas = validarCampo('unidades', unidades);
-
-    if (!nombreValido || !marcaValida || !modeloValido || !precioValido || !unidadesValidas) {
-        mostrarMensaje('error', 'Corrija los errores en el formulario');
-        return;
-    }
-
-    // VALIDAR NOMBRE ÚNICO
-    const nombreUnico = await validarNombreProducto(nombre);
-    if (!nombreUnico) {
-        mostrarEstado('nombre', '✗ Este nombre de producto ya existe');
-        mostrarMensaje('error', 'El nombre del producto ya existe. Use otro nombre.');
-        return;
-    }
-
-    // SI TODAS LAS VALIDACIONES PASAN, ENVIAR EL FORMULARIO
-    console.log('Enviando formulario...');
-    
-    // Crear objeto con los datos
+    // CREAR OBJETO CON LOS DATOS
     const datosProducto = {
         nombre: nombre,
         marca: marca,
@@ -397,13 +338,12 @@ async function agregarProducto(e) {
         imagen: imagen
     };
 
+    // AGREGAR ID SI ESTÁ EN MODO EDICIÓN
     if (editMode) {
         datosProducto.id = currentEditId;
     }
 
-    console.log('Datos a enviar:', datosProducto);
-
-    // ENVIAR AL SERVIDOR COMO JSON (más simple)
+    // ENVIAR AL SERVIDOR
     $.ajax({
         url: './backend/product-add.php',
         type: 'POST',
@@ -416,12 +356,13 @@ async function agregarProducto(e) {
             if (respuesta.status === 'success') {
                 limpiarFormulario();
                 listarProductos();
+                cancelarEdicion();
+                // REQUISITO 3: Cambiar texto del botón al enviar
+                $('button.btn-primary').text("Agregar Producto");
             }
         },
         error: function(xhr, status, error) {
-            console.error('Error al guardar producto:', error);
-            console.error('Response:', xhr.responseText);
-            mostrarMensaje('error', 'Error al comunicarse con el servidor: ' + error);
+            mostrarMensaje('error', 'Error al comunicarse con el servidor');
         }
     });
 }
@@ -442,14 +383,12 @@ function eliminarProducto() {
                 
                 if (respuesta.status === 'success') {
                     listarProductos();
-                    // Si eliminamos el producto que estábamos editando
                     if (currentEditId === id) {
                         cancelarEdicion();
                     }
                 }
             },
-            error: function(xhr, status, error) {
-                console.error('Error al eliminar producto:', error);
+            error: function(error) {
                 mostrarMensaje('error', 'Error al eliminar producto');
             }
         });
@@ -460,29 +399,32 @@ function eliminarProducto() {
 function editarProducto() {
     const productId = $(this).data('id');
     
-    // BUSCAR EL PRODUCTO EN LA TABLA
-    const $fila = $(this).closest('tr');
-    const producto = {
-        id: productId,
-        nombre: $fila.find('td:eq(1)').text(),
-        marca: $fila.find('td:eq(2)').text(),
-        modelo: $fila.find('td:eq(3)').text(),
-        precio: parseFloat($fila.find('td:eq(4)').text().replace('$', '')),
-        unidades: parseInt($fila.find('td:eq(5)').text()),
-        detalles: '', // Estos datos vendrían del backend en una aplicación real
-        imagen: 'img/default.png'
-    };
-    
-    // ENTRAR EN MODO EDICIÓN
-    entrarModoEdicion(producto);
+    $.ajax({
+        url: './backend/product-single.php',
+        type: 'POST',
+        data: { id: productId },
+        dataType: 'json',
+        success: function(producto) {
+            entrarModoEdicion(producto);
+        },
+        error: function(error) {
+            mostrarMensaje('error', 'Error al cargar producto');
+        }
+    });
 }
 
-// FUNCIÓN PARA ACTIVAR MODO EDICIÓN
+// REQUISITO 2: SELECCIONAR PRODUCTO (cambiar texto del botón)
+function seleccionarProducto() {
+    $('button.btn-primary').text("Modificar Producto");
+}
+
+// ACTIVAR MODO EDICIÓN
 function entrarModoEdicion(producto) {
     editMode = true;
     currentEditId = producto.id;
+    nombreRepetido = false;
     
-    // LLENAR FORMULARIO CON DATOS DEL PRODUCTO
+    // LLENAR FORMULARIO
     $('#nombre').val(producto.nombre);
     $('#marca').val(producto.marca);
     $('#modelo').val(producto.modelo);
@@ -496,34 +438,19 @@ function entrarModoEdicion(producto) {
     $('#submit-btn').text('Actualizar Producto').removeClass('btn-primary').addClass('btn-success');
     $('#cancel-btn').show();
     
-    // SCROLL AL FORMULARIO
-    $('html, body').animate({
-        scrollTop: $('#product-form').offset().top
-    }, 500);
-    
     mostrarMensaje('info', `Editando producto: ${producto.nombre}`);
-    
-    // Configurar evento para cambiar texto del botón al hacer clic en productos
-    $(document).on('click', '.product-item', function(e) {
-        if (!$(e.target).hasClass('product-delete') && !$(e.target).hasClass('product-edit')) {
-            $('#submit-btn').text("Modificar Producto");
-        }
-    });
 }
 
 // CANCELAR EDICIÓN
 function cancelarEdicion() {
     editMode = false;
     currentEditId = null;
+    nombreRepetido = false;
     
-    // RESTABLECER FORMULARIO
     limpiarFormulario();
     
-    // RESTABLECER INTERFAZ
     $('#submit-btn').text('Agregar Producto').removeClass('btn-success').addClass('btn-primary');
     $('#cancel-btn').hide();
-    
-    mostrarMensaje('info', 'Edición cancelada');
 }
 
 // LIMPIAR FORMULARIO
@@ -538,10 +465,33 @@ function limpiarFormulario() {
     $('#productId').val('');
     
     ocultarTodosEstados();
-    $('#submit-btn').text("Agregar Producto");
 }
 
-// FUNCIÓN AUXILIAR PARA MOSTRAR MENSAJES
+// FUNCIONES AUXILIARES
+function mostrarEstado(campo, mensaje, esError = true) {
+    const elementoEstado = $(`#${campo}-status`);
+    elementoEstado.text(mensaje);
+    elementoEstado.removeClass('text-success text-warning');
+    elementoEstado.addClass(esError ? 'text-warning' : 'text-success');
+    elementoEstado.show();
+    
+    const elementoCampo = $(`#${campo}`);
+    elementoCampo.removeClass('is-valid is-invalid');
+    if (mensaje) {
+        elementoCampo.addClass(esError ? 'is-invalid' : 'is-valid');
+    }
+}
+
+function ocultarEstado(campo) {
+    $(`#${campo}-status`).hide();
+    $(`#${campo}`).removeClass('is-invalid is-valid');
+}
+
+function ocultarTodosEstados() {
+    $('#nombre-status, #marca-status, #modelo-status, #precio-status, #unidades-status, #detalles-status').hide();
+    $('#nombre, #marca, #modelo, #precio, #unidades, #detalles').removeClass('is-valid is-invalid');
+}
+
 function mostrarMensaje(status, mensaje) {
     let clase = 'alert-info';
     if (status === 'error') clase = 'alert-danger';
@@ -555,31 +505,9 @@ function mostrarMensaje(status, mensaje) {
     $('#product-result').removeClass('d-none').addClass('d-block');
     $('#container').html(template);
     
-    // AUTO-OCULTAR MENSAJES DE ÉXITO DESPUÉS DE 5 SEGUNDOS
     if (status === 'success') {
         setTimeout(() => {
             $('#product-result').addClass('d-none');
         }, 5000);
     }
-}
-// FUNCIÓN TEMPORAL PARA PRUEBAS - SIMULA LA VALIDACIÓN
-function simularValidacionNombre(nombre) {
-    return new Promise((resolve) => {
-        // Simulamos delay de red
-        setTimeout(() => {
-            // Lista de nombres que ya existen (simula BD)
-            const nombresExistentes = [
-                'Laptop Gaming Pro', 
-                'Calular Inteligente', 
-                'Calular Inteligente 2',
-                'Set de cubiertos'
-            ];
-            
-            const existe = nombresExistentes.some(nombreExistente => 
-                nombreExistente.toLowerCase() === nombre.toLowerCase()
-            );
-            
-            resolve(!existe); // true si está disponible, false si ya existe
-        }, 800);
-    });
 }

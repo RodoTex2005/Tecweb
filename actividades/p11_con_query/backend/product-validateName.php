@@ -1,25 +1,21 @@
 <?php
 include_once __DIR__.'/database.php';
 
-// SE CREA EL ARREGLO QUE SE VA A DEVOLVER EN FORMA DE JSON
 $data = array(
     'disponible' => true,
     'message' => 'Nombre disponible'
 );
 
-// VERIFICAR SI SE RECIBIÓ EL NOMBRE
 if(isset($_GET['nombre'])) {
     $nombre = mysqli_real_escape_string($conexion, trim($_GET['nombre']));
     
-    // VALIDAR QUE EL NOMBRE NO ESTÉ VACÍO
     if(empty($nombre)) {
         $data['disponible'] = false;
         $data['message'] = 'El nombre no puede estar vacío';
     } else {
-        // CONSULTAR SI EL NOMBRE YA EXISTE
-        $sql = "SELECT id FROM productos WHERE nombre = '$nombre' AND eliminado = 0";
+        // CAMBIO: productos → libros
+        $sql = "SELECT id FROM libros WHERE nombre = '$nombre' AND eliminado = 0";
         
-        // SI SE ENVÍA UN ID PARA EXCLUIR (EN CASO DE EDICIÓN)
         if(isset($_GET['excludeId']) && !empty($_GET['excludeId'])) {
             $excludeId = intval($_GET['excludeId']);
             $sql .= " AND id != $excludeId";
@@ -30,7 +26,7 @@ if(isset($_GET['nombre'])) {
         if($result) {
             if($result->num_rows > 0) {
                 $data['disponible'] = false;
-                $data['message'] = 'Ya existe un producto con ese nombre';
+                $data['message'] = 'Ya existe un libro con ese nombre';
             }
             $result->free();
         }
@@ -40,10 +36,8 @@ if(isset($_GET['nombre'])) {
     $data['message'] = 'No se recibió el nombre para validar';
 }
 
-// CERRAR LA CONEXIÓN
 $conexion->close();
 
-// DEVOLVER LA RESPUESTA EN FORMATO JSON
 header('Content-Type: application/json');
 echo json_encode($data, JSON_PRETTY_PRINT);
 ?>
