@@ -25,7 +25,7 @@ if(!empty($producto)) {
             $conexion->set_charset("utf8");
             
             // USAR NOMBRES CORRECTOS DE COLUMNAS - descripcion en lugar de detalles
-            $sql = "INSERT INTO productos VALUES (null, '{$jsonOBJ->nombre}', '{$jsonOBJ->marca}', '{$jsonOBJ->modelo}', {$jsonOBJ->precio}, '{$jsonOBJ->descripcion}', {$jsonOBJ->unidades}, '{$jsonOBJ->imagen}', 0)";
+            $sql = "INSERT INTO productos VALUES (null, '{$jsonOBJ->nombre}', '{$jsonOBJ->marca}', '{$jsonOBJ->modelo}', '{$jsonOBJ->descripcion}', {$jsonOBJ->precio}, {$jsonOBJ->unidades}, '{$jsonOBJ->imagen}', 0)";
             
             if($conexion->query($sql)){
                 $data['status'] = "success";
