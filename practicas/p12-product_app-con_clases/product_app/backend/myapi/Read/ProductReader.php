@@ -7,7 +7,7 @@ require_once __DIR__ . '/../DataBase.php';
 class ProductReader extends DataBase {
     private $data;
 
-    public function __construct($db, $user = 'root', $pass = '12345678a') {
+    public function __construct($db, $user = 'root', $pass = 'Rudytexcuc@no') {
         $this->data = array();
         parent::__construct($db, $user, $pass);
     }
@@ -27,7 +27,7 @@ class ProductReader extends DataBase {
             die('Query Error: '.mysqli_error($this->conexion));
         }
         $this->conexion->close();
-        return $this->getData();
+        return json_encode($this->data, JSON_PRETTY_PRINT);
     }
 
     public function search($search) {
@@ -48,7 +48,7 @@ class ProductReader extends DataBase {
             }
             $this->conexion->close();
         }
-        return $this->getData();
+        return json_encode($this->data, JSON_PRETTY_PRINT);
     }
 
     public function single($id) {
@@ -66,10 +66,6 @@ class ProductReader extends DataBase {
             }
             $this->conexion->close();
         }
-        return $this->getData();
-    }
-
-    public function getData() {
         return json_encode($this->data, JSON_PRETTY_PRINT);
     }
 }

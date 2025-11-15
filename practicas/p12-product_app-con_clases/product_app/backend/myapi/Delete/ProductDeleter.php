@@ -7,7 +7,7 @@ require_once __DIR__ . '/../DataBase.php';
 class ProductDeleter extends DataBase {
     private $data;
 
-    public function __construct($db, $user = 'root', $pass = '12345678a') {
+    public function __construct($db, $user = 'root', $pass = 'Rudytexcuc@no') {
         $this->data = array();
         parent::__construct($db, $user, $pass);
     }

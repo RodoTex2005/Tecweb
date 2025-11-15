@@ -5,4 +5,4 @@
     
     $productos = new ProductDeleter('marketzone');
     echo $productos->delete( $_POST['id'] );
-?>  
+?>

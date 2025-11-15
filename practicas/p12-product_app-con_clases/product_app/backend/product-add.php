@@ -4,5 +4,6 @@
     use TECWEB\MYAPI\Create\ProductCreator;
     
     $productos = new ProductCreator('marketzone');
-    echo $productos->add( json_decode( json_encode($_POST) ) );
+    // Cambiar: usar $_POST directamente en lugar de JSON
+    echo $productos->add( (object)$_POST );
 ?>
