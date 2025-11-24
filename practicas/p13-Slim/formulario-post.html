@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario POST - Evidencia 3</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        form { max-width: 400px; padding: 20px; border: 1px solid #ccc; }
+        input, textarea { width: 100%; margin: 5px 0; padding: 8px; }
+        button { background: #007bff; color: white; padding: 10px; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Formulario para probar POST</h2>
+    
+    <form action="http://localhost/Tecweb/practicas/p13-Slim/pruebapost" method="post">
+        <div>
+            <label>Nombre:</label>
+            <input type="text" name="nombre" value="Producto Ejemplo" required>
+        </div>
+        
+        <div>
+            <label>Precio:</label>
+            <input type="number" name="precio" value="99.99" step="0.01" required>
+        </div>
+        
+        <div>
+            <label>Descripcion:</label>
+            <textarea name="descripcion" required>Este es un producto de prueba</textarea>
+        </div>
+        
+        <button type="submit">Enviar POST</button>
+    </form>
+    
+</body>
+</html>

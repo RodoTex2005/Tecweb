@@ -1,8 +1,4 @@
 <?php
-
-error_log("=== SLIM ACCESS ===");
-error_log("Request URI: " . $_SERVER['REQUEST_URI']);
-
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -25,21 +21,21 @@ $app->get('/', function (Request $request, Response $response, $args) {
 });
 
 // Ruta GET con parámetro
-$app->get('/hola/{nombre}', function (Request $request, Response $response, $args) {
+$app->get("/hola/{nombre}", function (Request $request, Response $response, $args) {
     $nombre = $args['nombre'];
     $response->getBody()->write("Hola, " . $nombre . "!");
     return $response;
 });
 
 // Ruta para probar POST
-$app->post('/pruebapost', function (Request $request, Response $response, $args) {
+$app->post("/pruebapost", function (Request $request, Response $response, $args) {
     $data = $request->getParsedBody();
     $response->getBody()->write("Método POST recibido. Datos: " . json_encode($data));
     return $response;
 });
 
 // Ruta para probar JSON
-$app->post('/testjson', function (Request $request, Response $response, $args) {
+$app->post("/testjson", function (Request $request, Response $response, $args) {
     $data = $request->getParsedBody();
     $responseData = [
         'status' => 'success',
