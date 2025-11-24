@@ -1,0 +1,24 @@
+{
+    "name": "tecweb/myapi",
+    "description": "API para gestión de productos",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "TECWEB\\MYAPI\\": "myapi/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rodo",
+            "email": "rodolfo.texmen@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "3.0"
+    },
+    "repositories": [{
+        "name": "packagist",
+        "type": "composer",
+        "url": "http://packagist.org"
+    }]
+}
