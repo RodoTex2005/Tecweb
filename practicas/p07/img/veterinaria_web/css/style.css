@@ -1,0 +1,88 @@
+/* ===== PALETA =====
+   Café suave: #8A5A44
+   Café claro: #C8A48E
+   Azul tenue: #84A7C1
+   Fondo: #F7F4EF
+   Texto: #2E2E2E
+*/
+
+/* Fondo general */
+body {
+    background-color: #F7F4EF;
+    color: #2E2E2E;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background-color: #8A5A44;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 20px 15px;
+    color: white;
+}
+
+.sidebar h2 {
+    font-size: 20px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.sidebar a {
+    display: block;
+    color: #F7F4EF;
+    padding: 10px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-bottom: 8px;
+    transition: background 0.3s ease;
+}
+
+.sidebar a:hover {
+    background-color: #C8A48E;
+    color: #2E2E2E;
+}
+
+/* Contenido principal */
+.content {
+    margin-left: 220px;
+    padding: 25px;
+}
+
+/* Botones */
+.btn-primary {
+    background-color: #84A7C1;
+    border-color: #84A7C1;
+}
+
+.btn-primary:hover {
+    background-color: #6E90A6;
+    border-color: #6E90A6;
+}
+
+.btn-secondary {
+    background-color: #C8A48E;
+    border: none;
+    color: #2E2E2E;
+}
+
+.btn-secondary:hover {
+    background-color: #b38c75;
+    color: white;
+}
+
+/* Tabla */
+.table {
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #E3D6CC;
+}
+
